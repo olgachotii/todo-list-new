@@ -352,6 +352,16 @@ export const Chip = styled.span`
 npm install classnames
 ```
 
+## 6 SASS
+
+-[](https://create-react-app.dev/docs/adding-a-sass-stylesheet/)
+
+Для того, чтобы подключить к React проекту предпроцессор Sass достаточно воспользоваться пакетом
+node-sass. Данный пакет позволяет без дополнительных установок добавить Sass в ваш React проект. Для
+его установки достаточно воспользоваться командой
+
+`npm install sass`
+
 -[силка на лекцію](https://www.youtube.com/watch?v=2tPxoJxaCes&t=3420s)
 
 # 1. this.setState - метод изменения сосотояния (state) в React
