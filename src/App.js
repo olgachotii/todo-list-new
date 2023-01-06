@@ -1,15 +1,41 @@
 import React, { Component } from "react";
 import { nanoid } from "nanoid";
+
+import Container from "./components/Container/Container";
 import TodoList from "./components/TodoList";
 import TodoEditor from "./components/TodoEditor";
 import Filter from "./components/Filter";
-import initialTodos from "./todos.json";
+import Modal from "./components/Modal/Modal";
+import IconButton from "./components/IconButton/IconButton";
+import { ReactComponent as AddIcon } from "./icons/add.svg";
+// import initialTodos from "./todos.json";
 
 class App extends Component {
   state = {
-    todos: initialTodos,
+    todos: [],
     filter: "",
+    showModal: false,
   };
+
+  componentDidMount() {
+    // console.log("componentDidMount");
+
+    const todos = localStorage.getItem("todos");
+    const parsedTodos = JSON.parse(todos);
+
+    if (parsedTodos) {
+      this.setState({ todos: parsedTodos });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevstSate) {
+    // console.log("componentDidUpdate");
+
+    if (this.state.todos !== prevstSate.todos) {
+      // console.log("обновилось поле todos");
+      localStorage.setItem("todos", JSON.stringify(this.state.todos));
+    }
+  }
 
   addTodo = (text) => {
     // console.log(text);
@@ -21,6 +47,8 @@ class App extends Component {
     this.setState(({ todos }) => ({
       todos: [todo, ...todos],
     }));
+
+    this.togleModal();
   };
 
   deleteTodo = (todoId) => {
@@ -57,29 +85,46 @@ class App extends Component {
     );
   };
 
+  togleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
+  };
+
   render() {
-    const { todos, filter } = this.state;
+    const { todos, filter, showModal } = this.state;
 
     const totalTodoCount = todos.length;
     const completedTodoCount = this.getCompletedTodoCount();
     const visibleTodos = this.getVisibleTodos();
 
     return (
-      <>
-        <h1>Состояние компонента</h1>
+      <Container>
+        <IconButton onClick={this.togleModal}>
+          <AddIcon width="40px" fill="#fff" />
+        </IconButton>
+        {/* <button type="button" onClick={this.togleModal}>
+          open modal
+        </button> */}
+        {showModal && (
+          <Modal onClose={this.togleModal}>
+            <TodoEditor onSubmit={this.addTodo} />
+            <button type="button" onClick={this.togleModal}>
+              close
+            </button>
+          </Modal>
+        )}
         <div>
           <p>Общее кол-во: {totalTodoCount}</p>
           <p>Кол-во выполненных: {completedTodoCount}</p>
         </div>
-        <TodoEditor onSubmit={this.addTodo} />
+        <Filter value={filter} onChange={this.changeFilter} />
         <TodoList
           todos={visibleTodos}
           onDeleteTodo={this.deleteTodo}
           onToggleCompleted={this.toggleCompleted}
         />
-
-        <Filter value={filter} onChange={this.changeFilter} />
-      </>
+      </Container>
     );
   }
 }

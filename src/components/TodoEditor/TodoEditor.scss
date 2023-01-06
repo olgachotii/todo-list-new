@@ -1,13 +1,14 @@
 @import '../../styles/shared.scss';
 
+
 .TodoEditor {
-    width: 600px;
     display: flex;
     flex-direction: column;
     padding: 16px;
     border: 1px solid $black;
     border-radius: 4px;
     margin-bottom: 20px;
+    max-width: 600px;
 }
 
 .TodoEditor__textarea {
